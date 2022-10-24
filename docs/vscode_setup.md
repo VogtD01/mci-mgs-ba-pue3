@@ -1,156 +1,92 @@
 # VS Code Setup
 
+The following tutorial was made for Windows users with. The process might be different for any other operating system.
+
 ## Initial Installation
+
+For the initial installation you can follow two ways:
+- Option A: You have access to the sakai site of the MCI Course 'Hardwarenahe Softwareentwicklung' or 'Programmierübungen 3'. If so, download the 'installationsfiles.zip' file from the resources folder there. All relevant files are part of the .zip file.
+- Option B: Download the "installationsfiles.zip" file from the [drive](https://drive.google.com/drive/folders/1Us2nApnVqCk2eESj3GP7jM6fATm70s_C?usp=sharing)
+
+After you went for option A or B you have downloaded the 'installationsfiles.zip'. Unzip the archive as it contains the following files and folders:
+  ```
+  installationsfiles/
+  |-- CP210x_Universal_Windows_Driver/
+  |-- node-v16.18.0-x64.msi
+  |-- python-3.10.8-amd64.exe
+  |-- VSCodeUserSetup-x64-1.72.2.exe
+  ```
+
+
+### Node JS
+
+- Install Node JS by executing the file 'node-v16.18.0-x64.msi'
+- No extra check boxes need to be checked in the installation process of Node JS
 
 ### Python
 
-- Download and install [Python](https://www.python.org/downloads/). **Node.JS** requires one of the versions 3.7, 3.8, 3.9, 3.10.
-
-### Node.JS
-
-- Download and install [Node.JS](https://nodejs.org/en/).
-- Configure Node.js native addon build tool. [See](https://github.com/nodejs/node-gyp#on-windows) for additional information.
-  - Install Visual C++ Build Environment: [Visual Studio Build Tools](https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=BuildTools) (using "Visual C++ build tools" workload) or [Visual Studio Community](https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=Community) (using the "Desktop development with C++" workload)
-  - Launch cmd, `npm config set msvs_version 2017`
-  - Set the Python executeable path, `npm config set python /path/to/python.exe`
+- Install Python 3.10.8 by executing the file 'python-3.10.8-amd64.exe'
+- At the beginning of the installation process check the checkbox that Python is added the the PATH (this enables an easier use for python within out VS Code Setup)
+- At the end of the installation process you have the option to disable the path length limit of Windows. Make sure to disable the path length limit.
 
 ### Visual Studio Code
 
-- Download and install [VS Code](https://code.visualstudio.com/download)
-- Install the extensions `Python` + `Pylance`
+- Install VS Code by executing 'VSCodeUserSetup-x64-1.72.2.exe'
+- Optional: If you want to have a dektop icon for VS Code make sure to check the checkbox during the installation process
 
-#### Extension PyMakr
+### Install the driver for ESP32 Board
 
-- Install the extension PyMakr within VS Code.
-- Edit the global settings (`STRG`+`SHIFT`+`P` -> `Pymakr > Global settings`).
-  In `pymakr.json` edit the following lines:
+- Plug in the ESP32 board with the USB Cable. Depending on your system the drivers are installed automatically. Make sure to check, whether the driver installation worked by following the following steps:
+	-  press the 'Windows key' + 'X'
+	-  click on the item 'Device Manager' (in german 'Gerätemanager')
+
+- If the CP2102 Device is listed under 'Ports' (in german 'Anschlüsse'), showing a corresponding COM port (e.g. COM3, COM6, etc.), the driver installation was done automatically. If this is not the case, you have to manually instal the driver. To do so follow the following steps:
+	-  Have a look at the devices that are listed under 'Other devices' (in german 'Andere Geräte')
+	-  There might be a device called 'CP2102 USB to UART Bridge Controller' or 'Serial Device' or simial
+	-  Right click the device and click on properties (in german 'Eigenschaften'). The pop up window shows a button to named 'Update Driver...'
+	-  Left click the button and follow the instructions till you can choose to browse the computer for driver software.
+	-  After left clicking the option, brows to the folder 'CP210x_Universal_Windows_Driver' within your extracted installation files and start the driver installation
+
+Congratulations, you have finished the first step of the VS Code Setup. Now we can start the second step.
+
+
+## VS Code Configuration
+
+After starting VS Code for the first time you have to install several extension so VS Code is capable to develop project with Micropython and ESP32 boards. Follow the setps below to enable this:
+- Either navigate to the 'extension' view by left clicking the button on the leftmost coloumn, which lists the 'explorer', 'search', 'source control', 'run and debug' and 'extension' view. Much quicker, you can use the given Shortcuts by pressing 'Ctrl'+'Shift'+'X'
+- Within the 'extension' view, you have to install the extensions in the order 'python', 'pylance' and 'pymakr'
+- After the successful installation you should have additional views in the leftmost coloumn (one of them is named 'PyMakr')
+
+Congratulations, you have finished the second step of the VS Code Setup. Now we can start our first test project:
+
+## Project Deploymnet
+- Creat a workspace directory on your computer which you want to use for all your Micropython projects. You can name the directory as you would like. For easierer expainations we use a directory 'C:/mpy_projects'
+- Now add the folder to your workspace...
+	- ...by leftclicking the File Button in the topmost bar and the leftclicking the 'Add folder to workspace...' button...
+	- ...and the navigate to the respective folder (in this tutorial it is 'C:/mpy_projects')
+- Now, check whether the workspace was added correctly either by navigating to the 'explorer' view by left clicking the button on the leftmost coloumn, or you can use the given Shortcuts by pressing 'Ctrl'+'Shift'+'E'
+- If the ESP board is not already plugged in, plug it in now
+- As a next step choose the PyMakr View and create or add a pymakr project (use the empty project configuration with the Silicon Labs CP210x USB to UART Bridge as selected device)
+- Navigate to the 'explorer' view to see, that there are now three files within your project folder:
   ```
-  ...
-  "address": "",
-  "username": "",
-  "password": "",
-  ...
-  "py_ignore": [
-      "pymakr.conf",
-      ".vscode",
-      ".gitignore",
-      ".git",
-      "project.pymakr",
-      "env",
-      "venv",
-      "micropython-stubs"
-  ],
-  ...
-  "autoconnect_comport_manufacturers": [
-      "Pycom",
-      "Pycom Ltd.",
-      "FTDI",
-      "Microsoft",
-      "Microchip Technology, Inc.",
-      "1a86",
-      "Silicon Labs"
-  ]
-  ...
+  mpy_projects/
+  |-- boot.py
+  |-- main.py
+  |-- pymakr.conf
   ```
-  If you want to use a specific port, set `"auto_connect": false` and then define the port `"address": "COM4"`.
+  
+- Open the main.py file by left clicking it and change the content to:
 
-### MicroPython Stubs
-
-- Clone the [micropython-stubs](https://github.com/Josverl/micropython-stubs) repository next to your MicroPython projects.
-  `git clone https://github.com/Josverl/micropython-stubs.git`
-  Example folder structure:
   ```
-  MyMicroPythonProjects/
-  |-- micropython-stubs/
-  |-- mpy_project_01/
-  |-- mpy_project_02/
-  ```
+  import time
 
-## Project Setup
-
-### Python Environment
-
-#### Virtual environment
-
-- Create a new virtual environment for your project.
-  Open the terminal and type `python -m venv venv`
-- Select the interpreter `STRG`+`SHIFT`+`P` -> `Python: Select Interpreter` from the virtual environment (`./venv/Scripts/python.exe`).
-
-#### Install Requirements
-
-You will need following packages:
-- `esptool`
-- `pylint`
-
-Open the terminal and activate the environment by typing `venv\Scripts\activate`.
-Install the packages via `pip install pylint esptool`.
-
-#### Link the MicroPython Stubs
-
-- Copy the files from the floder `micropython-stubs/docs/samples` to your project root folder.
-- Edit the file `.vscode/settings.json`. This is an ESP32 specific configuration example:
-  ```
-  {
-    "python.defaultInterpreterPath": "./venv/Scripts/python.exe",
-    "python.languageServer": "Pylance",
-    "python.linting.enabled": true,
-    "python.linting.pylintEnabled": true,
-    "python.autoComplete.extraPaths": [
-	"lib",
-	"../micropython-stubs/stubs/cpython_core-pycopy",
-	"../micropython-stubs/stubs/micropython-v1_18-frozen/esp32/GENERIC",
-	"../micropython-stubs/stubs/micropython-v1_18-esp32",
-    ],
-    "python.analysis.extraPaths": [
-	"lib",
-	"../micropython-stubs/stubs/cpython_core-pycopy",
-	"../micropython-stubs/stubs/micropython-v1_18-frozen/esp32/GENERIC",
-	"../micropython-stubs/stubs/micropython-v1_18-esp32"
-    ],
-  }
-  ```
-- Edit the line `init-hook=...` in the file `.pylintrc`.
-  ```
-	  init-hook='import sys;sys.path[1:1] = ["lib", "../micropython-stubs/stubs/cpython_core-pycopy", "../micropython-stubs/stubs/micropython-v1_18-frozen/esp32/GENERIC", "../micropython-stubs/stubs/micropython-v1_18-esp32",];'
+  while 1:
+    print('Congratulation, the setup works')
+    time.sleep(1)
   ```
 
-### Firmware
+- Navigate back to the 'PyMakr' view and click the sync to device button within the empty project
+- Open the PyMakr terminal by left clicking the create terminal button within the empty project
+- Press the EN button and see whether the terminal shows you the message 'Congratulation, the setup works' every second
 
-Download the device firmware from [MicroPython](https://micropython.org/download/) to your project root directory.
-
-### Files and Folder
-
-Add the following files to your project root directory:
-- `boot.py`
-- `main.py`
-
-Add the following folder to your project root directory:
-- `lib` for additional modules.
-
-Example project structure:
-```
-mpy_project_01/
-|-- .pylintrc
-|-- .vscode/
-|   |-- settings.json
-|   |-- tasks.json
-|-- venv/
-|-- lib/
-|-- main.py
-|-- boot.py
-|-- esp32-20220117-v1.18.bin
-```
-
-## Project Deployment
-
-### Flash the Firmware
-
-Open the terminal and activate the environment by typing `venv\Scripts\activate`.
-Flash the firmware by following the instructions for your device on [MicroPython](https://micropython.org/download/).
-If you have an ESP32 you can perform following steps:
-1. `esptool --chip esp32 --port $COM-PORT$ erase_flash`
-2. `esptool --chip esp32 --port $COM-PORT$ --baud 460800 write_flash -z 0x1000 esp32-20220117-v1.18.bin`
-
-### Upload Project
-
-Upload your MicroPython project via the Pymakr `Upload` button or via `STRG`+`SHIFT`+`P` -> `Pymakr > Upload project`
+Congratulations, you have finished the third step of the VS Code Setup. Now we can start developing.
