@@ -31,7 +31,7 @@ HWSE/
 
 - :warning: At the end of the installation process you have the option to disable the path length limit of Windows. Make sure to disable the path length limit.
 
-## ESP32 Driver installation
+## ESP32 Driver
 
 - Plug in the ESP32 board with the USB Cable. Depending on your system the drivers are installed automatically. Make sure to check, whether the driver installation worked by following the following steps:
 
@@ -65,7 +65,7 @@ pip3 install esptool pylint
 Well done! You have finished the VS Code Setup.
 Now we can create our first project.
 
-# Creating a new Project
+# Create a new Project
 
 - Open the folder "vscode" and run "Code.exe" to open the IDE.
 
@@ -101,7 +101,7 @@ Your folder structure should now look like this:
         |-- pymakr.conf
 ```
 
-# Deploying your project
+# Deploy your project
 
 - Open the main.py file by left clicking it and change the content to:
 
@@ -128,4 +128,4 @@ while 1:
 
 - Press the EN button and see if the terminal shows you the message 'Congratulation, the setup works' and the blue LED on the ESP32 is blinking every second.
 
-Congratulations, you have finished the last step of the Setup. Now we can start developing :tada:
+### Congratulations, you have finished the last step of the Setup. Now we can start developing :rocket:
