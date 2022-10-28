@@ -42,9 +42,10 @@ HWSE/
 
     - Have a look at the devices that are listed under 'Other devices' (in german 'Andere Geräte')
 
-    - There might be a device called 'CP2102 USB to UART Bridge Controller' or 'Serial Device' or simial.
+    - There might be a device called 'CP2102 USB to UART Bridge Controller' or 'Serial Device' or similar.
 
     - Right click the device and click on properties (in german 'Eigenschaften'). The pop up window shows a button to named 'Update Driver...'
+    
     - Left click the button and follow the instructions till you can choose to browse the computer for driver software.
 
     - After left clicking the option, brows to the folder 'CP210x_Universal_Windows_Driver' within your extracted installation files and start the driver installation
@@ -126,6 +127,6 @@ while 1:
 
 - Open the PyMakr terminal by left clicking the create terminal button within the empty project
 
-- Press the EN button and see if the terminal shows you the message 'Congratulation, the setup works' and the blue LED on the ESP32 is blinking every second.
+- Press the EN button on the ESP32 board and see if the terminal in the IDE shows you the message 'Congratulation, the setup works' and the blue LED on the ESP32 is blinking every second.
 
 ### Congratulations, you have finished the last step of the Setup. Now we can start developing :rocket:
