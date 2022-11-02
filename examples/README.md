@@ -14,3 +14,5 @@ mpy_projects/
     |-- main_ofmyexample.py
     |-- pymakr_ofmyexample.conf
 ```
+- Set up the hardware according to the needs
+- Syncronize the code to your ESP, press the enable button and check out the behaviour
