@@ -16,7 +16,7 @@ if __name__ == "__main__":
         val = adc.read_u16()
 
         #Ausgabe des normalisierten Werts im Terminal
-        print(f'Sensor reading: {val_norm}')
+        print(f'Sensor reading: {val}')
    
         # Eine Sekunde warten
         time.sleep(0.2)
