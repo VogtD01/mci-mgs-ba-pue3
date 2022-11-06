@@ -26,7 +26,7 @@ if __name__ == "__main__":
         for value in range(max_value):
             pwm_0.duty(value)
             time.sleep(0.001)
-            
+
         for value in range(max_value):
             pwm_0.duty(max_value-value)
             time.sleep(0.001)
