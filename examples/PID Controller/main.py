@@ -20,6 +20,7 @@ Kd = 100
 # Inputs zu den Zeitpunkten t0, t-1 und t-2
 inpt = [0,0,0]
 inpt[0] = 1
+
 # Outputs zu den Zeitpunkten t0 und t-1
 output = [0,0]
 
@@ -41,7 +42,6 @@ def ISR(t):
     output[0] = output[1]+inpt[0]*(Kp+Kd+Ki)-inpt[1]*(2*Kd+Kp)+inpt[2]*Kd
 
     print(f'Input: {inpt[0]} Output: {output[0]}')
-
 
     led_duty = int(mapping(output[0], 0, 0, 100, 1023))
 
