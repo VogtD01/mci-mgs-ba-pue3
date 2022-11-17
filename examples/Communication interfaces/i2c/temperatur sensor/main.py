@@ -59,6 +59,6 @@ if __name__ == "__main__":
         temperature = (temperature | tmp_buf[0]) << 5
         tmp_buf[1] = (tmp_buf[1] >> 3)
         temperature = (temperature | tmp_buf[1]) 
-        print(float(temperature) * resolution * n_temp)
+        print(f'Temperatur: {float(temperature) * resolution * n_temp}°C')
         time.sleep(1)
         
