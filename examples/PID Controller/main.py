@@ -1,67 +1,88 @@
-from machine import Pin, ADC, Timer, PWM
+from time import sleep
+from machine import Pin, ADC, PWM
 
-start_pin = Pin(34, Pin.PULL_DOWN)
+# Setup:
+# Verbinde eine LED mit GPIO25
+# Verbinde einen Lichtsensor mit GPIO32
+# Plaziere LED relativ nah an Lichtsensor (ca. 1cm Abstand)
+# Verdunkle den Sensor mit den Händen
+# Die LED soll nun heller leuchten
 
-# Init adc
-adc_pin = Pin(32, Pin.IN)
-adc0 = ADC(adc_pin)
-adc_read = 1
+class PID:
 
-# PWM Init
-pwm0 = PWM(Pin(25))
-pwm0.freq(100000)
-pwm0.duty(0)
+    def __init__(self, Kp=0, Ki=0, Kd=0, st=1, sp=50):
 
-# PID Values
-Kp = 1
-Ki = 0.1
-Kd = 100
+        self.Kp = Kp                # Proportional
+        self.Ki = Ki                # Integral
+        self.Kd = Kd                # Derivative
+        self.st = st                # Sampletime
+        self.sp = sp                # Setpoint
 
-# Inputs zu den Zeitpunkten t0, t-1 und t-2
-inpt = [0,0,0]
-inpt[0] = 1
+        self.inpt = [1,0,0]         # Input array mit Anregeimpuls
+        self.output = [0,0]         # Output array
 
-# Outputs zu den Zeitpunkten t0 und t-1
-output = [0,0]
+    def control(self, inpt):
 
-setpoint = 50
+        self.inpt[0] = self.sp - inpt
+        self.output[0] = self.output[1]+self.inpt[0]*(self.Kp+self.Kd+self.Ki)-self.inpt[1]*(2*self.Kd+self.Kp)+self.inpt[2]*self.Kd
 
+        if self.output[0] <= -100:
+            self.output[0] = -100
+
+        print(f'PID Input: {self.inpt[0]} PID Output: {self.output[0]}')
+
+        self.output[1] = self.output[0]
+        self.inpt[2] = self.inpt[1]
+        self.inpt[1] = self.inpt[0]
+
+        sleep(self.st)
+
+        return self.output[0]
 
 def mapping(val_in, min_in, min_out, max_in, max_out):
-    return min_out + (max_out - min_out) * (val_in - min_in) / (max_in - min_in)
 
-def ISR(t):
+    val_out = min_out + (max_out - min_out) * (val_in - min_in) / (max_in - min_in)
+    return int(val_out)
 
-    raw_input = adc0.read_u16()
-    measured = mapping(raw_input, 0, 0, 65535, 100)
-
-    print(f'raw measured: {raw_input}, mapped measured: {measured}')
-
-    inpt[0] = setpoint - measured
-
-    output[0] = output[1]+inpt[0]*(Kp+Kd+Ki)-inpt[1]*(2*Kd+Kp)+inpt[2]*Kd
-
-    print(f'Input: {inpt[0]} Output: {output[0]}')
-
-    led_duty = int(mapping(output[0], 0, 0, 100, 1023))
-
-    print(f'dc: {led_duty}')
-    pwm0.duty(led_duty)
-
-    output[1] = output[0]
-    inpt[2] = inpt[1]
-    inpt[1] = inpt[0]
-
-
-
-tim0 = Timer(1)
-tim0.init(period=200, mode=Timer.PERIODIC, callback=ISR)
 
 if __name__ == "__main__":
+
+    print("Main started")
+
+    # ADC init
+    adc_pin = Pin(32, Pin.IN)
+    adc0 = ADC(adc_pin)
+
+    # PWM Init
+    pwm0 = PWM(Pin(25))
+    pwm0.freq(10000)
+    pwm0.duty(0)
+
+    # PID Init
+    pid = PID(Kp=0.1, Ki=0.1, Kd=0.1, st=0.1, sp=50)
+    pid_out = 0
+
     while True:
 
-        # Um die ISR Funktion des Timers bei Bedarf zu unterbrechen,
-        # überprüft das Programm ob Pin 34 einen HIGH Zustand hat.
-        # Ist der Zustand LOW, wird der Timer deinitialisiert.
-        if not start_pin.value():
-            tim0.deinit()
+        # Liest den aktuellen Helligkeitswert
+        sensor_val_raw = adc0.read()
+        print(f'raw: {sensor_val_raw}')
+
+        # Normalisiert den Messwert auf einen Wert von 0 bis 100
+        sensor_val_norm = mapping(sensor_val_raw, 0, 0, 4095, 100)
+        print(f'mapped: {sensor_val_norm}')
+
+        # Regelung durch PID controller
+        pid_out = pid.control(inpt=sensor_val_norm)
+        print(f'PID output: {pid_out}')
+
+        led_value = mapping(pid_out, -100, 0, 100, 1023)
+
+        # Duty Cycle kann minimal 0 sein
+        if led_value < 0:
+            led_value = 0
+
+        pwm0.duty(led_value)
+        print(f'LED PWM input: {led_value}\n')
+
+        
