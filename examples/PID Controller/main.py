@@ -29,6 +29,9 @@ class PID:
         if self.output[0] <= -100:
             self.output[0] = -100
 
+        if self.output[0] >= 100:
+            self.output[0] = 100
+
         print(f'PID Input: {self.inpt[0]} PID Output: {self.output[0]}')
 
         self.output[1] = self.output[0]
@@ -59,7 +62,7 @@ if __name__ == "__main__":
     pwm0.duty(0)
 
     # PID Init
-    pid = PID(Kp=0.1, Ki=0.1, Kd=0.1, st=0.1, sp=50)
+    pid = PID(Kp=0.1, Ki=0.1, Kd=0.1, st=0.5, sp=50)
     pid_out = 0
 
     while True:
@@ -85,4 +88,3 @@ if __name__ == "__main__":
         pwm0.duty(led_value)
         print(f'LED PWM input: {led_value}\n')
 
-        
