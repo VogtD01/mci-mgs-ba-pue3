@@ -23,7 +23,7 @@ def flash(led,t):
     led.value(0)
     return
 
-def send(msg="SOS",pin=2,tdot = 1.2/wpm):
+def send(msg="SOS",pin=2,tdot = 3/wpm):   #ursprünglich 1.2
     led = machine.Pin(pin,machine.Pin.OUT)
 
     tdash = tdot * 3
@@ -42,3 +42,5 @@ def send(msg="SOS",pin=2,tdot = 1.2/wpm):
            if e==" ": time.sleep(tword)
         time.sleep(tword)
     led.value(0)    
+
+

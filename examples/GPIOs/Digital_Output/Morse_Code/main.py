@@ -7,5 +7,9 @@ import time
 led_pin = Pin(2, Pin.OUT)
 
 while 1:
-  print("Test and check")
+  print("Test and check1")
   morsecode.send("SOS")
+
+
+  
+  
